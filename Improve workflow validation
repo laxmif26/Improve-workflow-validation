@@ -1,0 +1,34 @@
+#Modify Workflow Parsing Logi
+def create_workflow(name, id=None):
+    if id is None:
+        id = generate_unique_id()  # Function to generate a unique UUID
+
+    # Ensure name is not treated as an id
+    workflow = {
+        "id": id,
+        "name": name,
+        "is_deleted": 0,  # Default to not deleted
+        "configuration_error": False  # New flag for validation
+    }
+    # Logic to add the workflow to the database or data structure
+    return workflow
+#Update Workflow Deletion Logic
+def delete_workflow(workflow_id):
+    workflow = find_workflow_by_id(workflow_id)
+    if workflow:
+        workflow["is_deleted"] = 1  # Mark as deleted
+
+def list_workflows(include_deleted=False):
+    workflows = get_all_workflows()
+    if not include_deleted:
+        workflows = [w for w in workflows if w["is_deleted"] == 0]
+    return workflows
+#Improve Validation with Error Flags
+def validate_workflow(workflow):
+    # Example validation checks
+    if not is_configuration_valid(workflow):
+        workflow["configuration_error"] = True
+
+    # Other validation checks...
+    return not workflow["configuration_error"]  # Return False if there is an error
+
